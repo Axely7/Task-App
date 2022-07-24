@@ -7,7 +7,17 @@ export const getTasks = async (req, res) => {
   res.json(result);
 };
 
-export const getTask = async (req, res) => {};
+export const getTask = async (req, res) => {
+  const [resultado] = await pool.query("SELECT * FROM tasks WHERE id = ?", [
+    req.params.id,
+  ]);
+
+  if (resultado.length === 0) {
+    return res.status(404).json({ message: "Task not found" });
+  }
+
+  res.json(resultado[0]);
+};
 
 export const createTask = async (req, res) => {
   const { title, description } = req.body;
